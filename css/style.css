@@ -1,0 +1,66 @@
+body{
+    margin: 0;
+}
+
+.console * {
+    font-family: monospace;
+}
+
+.console {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #111111;
+}
+
+.console-history{
+    box-sizing: border-box;
+    padding: 24px;
+    padding-bottom: 0px;
+    overflow-y: auto;
+}
+
+.console-input-log,
+.console-output-log {
+    box-sizing: border-box;
+    padding : 6px 12px;
+}
+
+.console-input-log:hover,
+.console-output-log:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.console-input-log{
+    color: #0000ff;
+}
+
+.console-output-log{
+    color: #0fcc;
+}
+
+.console-input{
+    background: transparent;
+    background-color: transparent;
+    resize: none;
+    outline: none;
+    border: none;
+    flex-shrink: 0;
+    box-sizing: border-box;
+    padding: 12px;
+    border: none;
+    border-top: 1px solid #333333;
+    color: #ffffff;
+    transition: background 0.2s;
+}
+
+
+.input-div{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    color:#0000ff;
+    padding-left: 36px;/* 24+12 */
+
+}
