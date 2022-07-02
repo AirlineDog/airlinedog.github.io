@@ -27,11 +27,6 @@ body{
     padding : 6px 12px;
 }
 
-.console-input-log:hover,
-.console-output-log:hover {
-    background: rgba(255,255,255,0.3);
-}
-
 .console-input-log{
     color: #0000ff;
 }
