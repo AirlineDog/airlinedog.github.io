@@ -2,7 +2,7 @@ const consoleInput = document.querySelector(".console-input");
 const historyContainer = document.querySelector(".console-history");
 const consoleOutput = document.querySelector(".input-line");
 const history = [];
-
+var historyindex = 0;
 function addResult(inputString, output){
     const outputString = output.toString();
     const inputLogElement = document.createElement("div");
@@ -19,11 +19,12 @@ function addResult(inputString, output){
 
 consoleInput.addEventListener("keyup", e => {
     const command = consoleInput.value.trim();
-    if(command.length === 0 ){
-        return;
-    }
 
     if (e.key === "Enter"){
+        if(command.length === 0 ){
+            return;
+        }
+        historyindex = 0;
         history.push(command);
         
         switch (command.toLowerCase()) {
@@ -42,6 +43,27 @@ consoleInput.addEventListener("keyup", e => {
         consoleInput.value = "";
         historyContainer.scrollTop = historyContainer.scrollHeight;
         consoleOutput.innerHTML = '<span id="typer"></span><b class="cursor" id="cursor">█</b>';
+    }
+    else if (e.key === "ArrowUp"){
+        if (history.length === 0){
+            return;
+        }
+        historyindex = Math.min(historyindex + 1, history.length);
+        consoleOutput.innerHTML = `<span id="typer">${history[history.length-historyindex]}</span><b class="cursor" id="cursor">█</b>`;
+        consoleInput.value = history[history.length-historyindex];
+
+    }
+    else if (e.key === "ArrowDown"){
+        if (history.length === 0){
+            return;
+        }
+        historyindex = Math.max(historyindex - 1, 0);
+        if (historyindex === 0){
+            consoleOutput.innerHTML = '<span id="typer"></span><b class="cursor" id="cursor">█</b>';
+        }else{
+            consoleOutput.innerHTML = `<span id="typer">${history[history.length-historyindex]}</span><b class="cursor" id="cursor">█</b>`;
+            consoleInput.value = history[history.length-historyindex];
+        }
     }
 });
 
