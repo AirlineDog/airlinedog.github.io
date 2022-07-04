@@ -3,7 +3,7 @@ const historyContainer = document.querySelector(".console-history");
 const consoleOutput = document.querySelector(".input-line");
 
 function addResult(inputString, output){
-    const outputString = output instanceof Array ? `[${output.join(", ")}]` : output.toString();
+    const outputString = output.toString();
     const inputLogElement = document.createElement("div");
     const outputLogElement = document.createElement("div");
 
@@ -17,17 +17,21 @@ function addResult(inputString, output){
 }
 
 consoleInput.addEventListener("keyup", e => {
-    const code = consoleInput.value.trim();
-    if(code.length === 0 ){
+    const command = consoleInput.value.trim();
+    if(command.length === 0 ){
         return;
     }
 
     if (e.key ==="Enter"){
-        try{
-            addResult(code,eval(code));
-        }catch (err){
-            addResult(code, err) 
+        switch (command.toLowerCase()) {
+            case "help":
+                printLines(command, help);
+                break;
+            default:
+                addResult(command, `${command}: Command not found. Enter 'help' for list of available commands.`) 
+                break;
         }
+        
         
         consoleInput.value = "";
         historyContainer.scrollTop = historyContainer.scrollHeight;
@@ -44,3 +48,19 @@ const inputHandler = function(e) {
 }
 
 consoleInput.addEventListener("input", inputHandler);
+
+function printLines(input, command){
+    const inputLogElement = document.createElement("div");
+    const outputLogElement = document.createElement("div");
+
+    inputLogElement.classList.add("console-input-log");
+    outputLogElement.classList.add("console-output-log");
+    
+    inputLogElement.textContent = `airlinedog@aueb.gr:~$ ${input}`;
+    var text = "";
+    for (var i = 0; i < command.length; i++) {
+        text += command[i].replace("  ", "&nbsp;".repeat(20+ 23-command[i].trim().split(/\s+/)[1].length));
+    }
+    outputLogElement.innerHTML = text;
+    historyContainer.append(inputLogElement, outputLogElement);
+}

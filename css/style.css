@@ -77,3 +77,11 @@ body{
       opacity: 0;
     }
 }
+
+.command{
+    color: #0000ff;
+}
+
+.command-help{
+    color: #00ff00;
+}
