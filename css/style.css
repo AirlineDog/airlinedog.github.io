@@ -36,20 +36,9 @@ body{
 }
 
 .console-input{
-    background: transparent;
-    background-color: transparent;
-    resize: none;
-    outline: none;
-    border: none;
-    flex-shrink: 0;
-    box-sizing: border-box;
-    padding: 12px;
-    border: none;
-    border-top: 1px solid #333333;
-    color: #ffffff;
-    transition: background 0.2s;
+    left: -1000px;
+    position: absolute;
 }
-
 
 .input-div{
     display: flex;
@@ -58,4 +47,33 @@ body{
     color:#0000ff;
     padding-left: 36px;/* 24+12 */
 
+}
+
+.input-line{
+    flex-grow: 1;
+}
+
+.input-line::before{
+    content: "airlinedog@aueb.gr:~$ ";
+    color: #0000ff;
+}
+
+.cursor {
+    color: #73ABAD;
+    background-color: #73ABAD;
+    position: relative;
+    opacity: 1;
+    height: 1.5em;
+    width: 10px;
+    max-width: 10px;
+    transform: translateY(4px);
+    overflow: hidden;
+    display: inline-block;
+    text-decoration: blink;
+    animation: blinker 1s linear infinite;
+}
+@keyframes blinker {
+    50% {
+      opacity: 0;
+    }
 }
