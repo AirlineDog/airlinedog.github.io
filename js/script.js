@@ -28,6 +28,9 @@ consoleInput.addEventListener("keyup", e => {
         history.push(command);
         
         switch (command.toLowerCase()) {
+            case "whois":
+                printLines(command, whois);
+                break;
             case "help":
                 printLines(command, help);
                 break;
@@ -91,7 +94,11 @@ function printLines(input, command){
 
     var text = "";
     for (var i = 0; i < command.length; i++) {
-        text += command[i].replace("  ", "&nbsp;".repeat(20+ 23-command[i].trim().split(/\s+/)[1].length));
+        if (input === "help"){
+            text += command[i].replace("  ", "&nbsp;".repeat(20+ 23-command[i].trim().split(/\s+/)[1].length));
+        }else{
+            text += command[i];
+        }
     }
     outputLogElement.innerHTML = text;
 

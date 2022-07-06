@@ -9,3 +9,10 @@ help = [
     '<span class="command">email</span>          <span class="command-help">Feel free to email me</span><br>',
     '<span class="command">clear</span>          <span class="command-help">Clear terminal</span><br><br>',
   ];
+
+whois = [
+    "<br>Hey, I'm Alex Doganis<br><br>",
+    "I am currently studying at the Department of Management Science & Technology<br>",
+    " of Athens University of Economics and Business, majoring in Software and Data Analysis Technologies.<br>",
+    "I am looking froward for opportunities to work in the field of software development.<br>",
+  ];
