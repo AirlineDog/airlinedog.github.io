@@ -2,7 +2,8 @@ const consoleInput = document.querySelector(".console-input");
 const historyContainer = document.querySelector(".console-history");
 const consoleOutput = document.querySelector(".input-line");
 const history = [];
-var historyindex = 0;
+var historyIndex = 0;
+
 function addResult(inputString, output){
     const outputString = output.toString();
     const inputLogElement = document.createElement("div");
@@ -24,18 +25,21 @@ consoleInput.addEventListener("keyup", e => {
         if(command.length === 0 ){
             return;
         }
-        historyindex = 0;
+        historyIndex = 0;
         history.push(command);
         
         switch (command.toLowerCase()) {
             case "whois":
                 printLines(command, whois);
                 break;
+            case "whoami":
+                getLocation();
+                break;
             case "help":
                 printLines(command, help);
                 break;
             case "history":
-                printHistory(command);
+                printHistory();
                 break;
             case "clear":
                 historyContainer.innerHTML = "";
@@ -54,21 +58,22 @@ consoleInput.addEventListener("keyup", e => {
         if (history.length === 0){
             return;
         }
-        historyindex = Math.min(historyindex + 1, history.length);
-        consoleOutput.innerHTML = `<span id="typer">${history[history.length-historyindex]}</span><b class="cursor" id="cursor">█</b>`;
-        consoleInput.value = history[history.length-historyindex];
+        historyIndex = Math.min(historyIndex + 1, history.length);
+        consoleOutput.innerHTML = `<span id="typer">${history[history.length-historyIndex]}</span><b class="cursor" id="cursor">█</b>`;
+        consoleInput.value = history[history.length-historyIndex];
 
     }
     else if (e.key === "ArrowDown"){
         if (history.length === 0){
             return;
         }
-        historyindex = Math.max(historyindex - 1, 0);
-        if (historyindex === 0){
+        historyIndex = Math.max(historyIndex - 1, 0);
+        if (historyIndex === 0){
             consoleOutput.innerHTML = '<span id="typer"></span><b class="cursor" id="cursor">█</b>';
+            consoleInput.value = "";
         }else{
-            consoleOutput.innerHTML = `<span id="typer">${history[history.length-historyindex]}</span><b class="cursor" id="cursor">█</b>`;
-            consoleInput.value = history[history.length-historyindex];
+            consoleOutput.innerHTML = `<span id="typer">${history[history.length-historyIndex]}</span><b class="cursor" id="cursor">█</b>`;
+            consoleInput.value = history[history.length-historyIndex];
         }
     }
 });
@@ -105,13 +110,13 @@ function printLines(input, command){
     historyContainer.append(inputLogElement, outputLogElement);
 }
 
-function printHistory(input){
+function printHistory(){
     const inputLogElement = document.createElement("div");
     const outputLogElement = document.createElement("div");
 
     inputLogElement.classList.add("console-input-log");
     outputLogElement.classList.add("console-output-log");
-    inputLogElement.textContent = `airlinedog@aueb.gr:~$ ${input}`;
+    inputLogElement.textContent = `airlinedog@aueb.gr:~$ history`;
 
     var text = "<br>";
     for (var i = 0; i < history.length; i++) {
@@ -120,6 +125,43 @@ function printHistory(input){
     text += "<br>";
     outputLogElement.innerHTML = text;
 
+
+    historyContainer.append(inputLogElement, outputLogElement);
+
+}
+function getLocation() {
+    const inputLogElement = document.createElement("div");
+    const outputLogElement = document.createElement("div");
+
+    inputLogElement.classList.add("console-input-log");
+    outputLogElement.classList.add("console-output-log");
+    inputLogElement.textContent = `airlinedog@aueb.gr:~$ whoami`;
+
+    outputLogElement.innerHTML = "<br>That's a difficult question!<br> All i can see is you are located in: <br>";
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function showPosition(position) {
+                                                 outputLogElement.innerHTML += "Latitude: " + position.coords.latitude + 
+                                                 "<br>Longitude: " + position.coords.longitude + "<br><br>";
+                                                 },
+                                                 function showError(error) {
+                                                    switch(error.code) {
+                                                      case error.PERMISSION_DENIED:
+                                                        outputLogElement.innerHTML += "User denied the request for Geolocation.<br><br>"
+                                                        break;
+                                                      case error.POSITION_UNAVAILABLE:
+                                                        outputLogElement.innerHTML += "Location information is unavailable.<br><br>"
+                                                        break;
+                                                      case error.TIMEOUT:
+                                                        outputLogElement.innerHTML += "The request to get user location timed out.<br><br>"
+                                                        break;
+                                                      case error.UNKNOWN_ERROR:
+                                                        outputLogElement.innerHTML += "An unknown error occurred.<br><br>"
+                                                        break;
+                                                    }
+                                                });
+    } else { 
+        outputLogElement.innerHTML = "<br>Geolocation is not supported by this browser.<br>";
+    }
 
     historyContainer.append(inputLogElement, outputLogElement);
 
