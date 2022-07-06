@@ -34,6 +34,9 @@ consoleInput.addEventListener("keyup", e => {
             case "history":
                 printHistory(command);
                 break;
+            case "clear":
+                historyContainer.innerHTML = "";
+                break;
             default:
                 addResult(command, `${command}: Command not found. Enter 'help' for list of available commands.`) 
                 break;
