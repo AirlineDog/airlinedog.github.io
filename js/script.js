@@ -35,6 +35,9 @@ consoleInput.addEventListener("keyup", e => {
             case "whoami":
                 getLocation();
                 break;
+            case "social":
+                printLines(command, social);
+                break;
             case "help":
                 printLines(command, help);
                 break;
@@ -139,30 +142,32 @@ function getLocation() {
 
     outputLogElement.innerHTML = "<br>That's a difficult question!<br> All i can see is you are located in: <br>";
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function showPosition(position) {
-                                                 outputLogElement.innerHTML += "Latitude: " + position.coords.latitude + 
-                                                 "<br>Longitude: " + position.coords.longitude + "<br><br>";
-                                                 },
-                                                 function showError(error) {
-                                                    switch(error.code) {
-                                                      case error.PERMISSION_DENIED:
-                                                        outputLogElement.innerHTML += "User denied the request for Geolocation.<br><br>"
-                                                        break;
-                                                      case error.POSITION_UNAVAILABLE:
-                                                        outputLogElement.innerHTML += "Location information is unavailable.<br><br>"
-                                                        break;
-                                                      case error.TIMEOUT:
-                                                        outputLogElement.innerHTML += "The request to get user location timed out.<br><br>"
-                                                        break;
-                                                      case error.UNKNOWN_ERROR:
-                                                        outputLogElement.innerHTML += "An unknown error occurred.<br><br>"
-                                                        break;
-                                                    }
-                                                });
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
     } else { 
         outputLogElement.innerHTML = "<br>Geolocation is not supported by this browser.<br>";
     }
 
     historyContainer.append(inputLogElement, outputLogElement);
 
+    function showPosition(position) {
+        outputLogElement.innerHTML += "Latitude: " + position.coords.latitude + 
+        "<br>Longitude: " + position.coords.longitude + "<br><br>";
+    }
+
+    function showError(error) {
+        switch(error.code) {
+            case error.PERMISSION_DENIED:
+                outputLogElement.innerHTML += "User denied the request for Geolocation.<br><br>"
+                break;
+            case error.POSITION_UNAVAILABLE:
+                outputLogElement.innerHTML += "Location information is unavailable.<br><br>"
+                break;
+            case error.TIMEOUT:
+                outputLogElement.innerHTML += "The request to get user location timed out.<br><br>"
+                break;
+            case error.UNKNOWN_ERROR:
+                outputLogElement.innerHTML += "An unknown error occurred.<br><br>"
+                break;
+        }
+    }
 }
