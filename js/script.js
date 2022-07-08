@@ -5,18 +5,29 @@ const history = [];
 var historyIndex = 0;
 var cursorIndex = 0;
 
-function addResult(inputString, output){
-    const outputString = output.toString();
-    const inputLogElement = document.createElement("div");
+window.onload = function showBanner(){
     const outputLogElement = document.createElement("div");
 
-    inputLogElement.classList.add("console-input-log");
     outputLogElement.classList.add("console-output-log");
+    var command = banner;
+    var text = "";
+    for (var i = 0; i < command.length; i++) {
+        var j = 0;
+        while (j < command[i].length){
+            if (command[i].charAt(j) === " " && command[i].charAt(j+1) === " "){
+                text += "&nbsp;&nbsp;";
+                j++;
+            }else{
+                text += command[i].charAt(j);
+            }
+            j++;
+        }
+        
+        text += "<br>";
+    }
+    outputLogElement.innerHTML = text;
 
-    inputLogElement.textContent = `airlinedog@aueb.gr:~$ ${inputString}`;
-    outputLogElement.textContent = outputString;
-
-    historyContainer.append(inputLogElement, outputLogElement);
+    historyContainer.append(outputLogElement);
 }
 
 consoleInput.addEventListener("keyup", e => {
@@ -68,6 +79,20 @@ consoleInput.addEventListener("keyup", e => {
         setCursorPosition(e.key);
     }
 });
+
+function addResult(inputString, output){
+    const outputString = output.toString();
+    const inputLogElement = document.createElement("div");
+    const outputLogElement = document.createElement("div");
+
+    inputLogElement.classList.add("console-input-log");
+    outputLogElement.classList.add("console-output-log");
+
+    inputLogElement.textContent = `airlinedog@aueb.gr:~$ ${inputString}`;
+    outputLogElement.textContent = outputString;
+
+    historyContainer.append(inputLogElement, outputLogElement);
+}
 
 function setHistory(key){
     if (history.length === 0){
