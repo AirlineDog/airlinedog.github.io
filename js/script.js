@@ -124,8 +124,15 @@ function printLines(input, command){
 
     var text = "";
     for (var i = 0; i < command.length; i++) {
-        for (var j = 0; j < command[i].length; j++) {
-            text += command[i].charAt(j) === " " ? "&nbsp;" : command[i].charAt(j);
+        var j = 0;
+        while (j < command[i].length){
+            if (command[i].charAt(j) === " " && command[i].charAt(j+1) === " "){
+                text += "&nbsp;&nbsp;";
+                j++;
+            }else{
+                text += command[i].charAt(j);
+            }
+            j++;
         }
         
         text += "<br>";
