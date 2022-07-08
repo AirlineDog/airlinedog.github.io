@@ -3,6 +3,7 @@ const historyContainer = document.querySelector(".console-history");
 const consoleOutput = document.querySelector(".input-line");
 const history = [];
 var historyIndex = 0;
+var cursorIndex = 0;
 
 function addResult(inputString, output){
     const outputString = output.toString();
@@ -19,7 +20,7 @@ function addResult(inputString, output){
 }
 
 consoleInput.addEventListener("keyup", e => {
-    const command = consoleInput.value.trim();
+    const command = consoleInput.value.trim().replace(/\n/, '');
 
     if (e.key === "Enter"){
         if(command.length === 0 ){
@@ -27,6 +28,7 @@ consoleInput.addEventListener("keyup", e => {
         }
         historyIndex = 0;
         history.push(command);
+        cursorIndex = 0;
         
         switch (command.toLowerCase()) {
             case "whois":
@@ -55,41 +57,58 @@ consoleInput.addEventListener("keyup", e => {
                 break;
         }
         
-        
         consoleInput.value = "";
         historyContainer.scrollTop = historyContainer.scrollHeight;
         consoleOutput.innerHTML = '<span id="typer"></span><b class="cursor" id="cursor">█</b>';
     }
-    else if (e.key === "ArrowUp"){
-        if (history.length === 0){
-            return;
-        }
-        historyIndex = Math.min(historyIndex + 1, history.length);
-        consoleOutput.innerHTML = `<span id="typer">${history[history.length-historyIndex]}</span><b class="cursor" id="cursor">█</b>`;
-        consoleInput.value = history[history.length-historyIndex];
-
+    else if (e.key === "ArrowUp" || e.key === "ArrowDown"){
+        setHistory(e.key);
     }
-    else if (e.key === "ArrowDown"){
-        if (history.length === 0){
-            return;
-        }
+    else if (e.key === "ArrowLeft" || e.key === "ArrowRight"){
+        setCursorPosition(e.key);
+    }
+});
+
+function setHistory(key){
+    if (history.length === 0){
+        return;
+    }
+    if (key === "ArrowUp"){
+        historyIndex = Math.min(historyIndex + 1, history.length);
+    }else if (key === "ArrowDown"){
         historyIndex = Math.max(historyIndex - 1, 0);
         if (historyIndex === 0){
             consoleOutput.innerHTML = '<span id="typer"></span><b class="cursor" id="cursor">█</b>';
             consoleInput.value = "";
-        }else{
-            consoleOutput.innerHTML = `<span id="typer">${history[history.length-historyIndex]}</span><b class="cursor" id="cursor">█</b>`;
-            consoleInput.value = history[history.length-historyIndex];
+            return;
         }
     }
-});
+    consoleOutput.innerHTML = `<span id="typer">${history[history.length-historyIndex]}</span><b class="cursor" id="cursor">█</b>`;
+    consoleInput.value = history[history.length-historyIndex];
+    consoleInput.focus();
+    consoleInput.setSelectionRange(consoleInput.value.length, consoleInput.value.length);
+}
+
+function setCursorPosition(key){
+    var textareaValue = consoleInput.value;
+    if (key === "ArrowLeft"){
+        cursorIndex = Math.min(textareaValue.length, cursorIndex + 1);
+    }else{ //ArrowRight
+        cursorIndex = Math.max(0, cursorIndex - 1);
+    }
+    var beforeCursor = textareaValue.substring(0, textareaValue.length - cursorIndex);
+    var afterCursor = textareaValue.substring(textareaValue.length - cursorIndex);
+    consoleOutput.innerHTML = `<span id="typer">${beforeCursor}</span><b class="cursor" id="cursor">█</b><span id="typer">${afterCursor}</span>`;
+}
 
 function focusOnInput(){
-    document.querySelector(".console-input").focus();
+    consoleInput.focus();
 }
 
 const inputHandler = function(e) {
-    consoleOutput.innerHTML = e.target.value + '<b class="cursor" id="cursor">█</b>';
+    consoleOutput.innerHTML = e.target.value.substring(0,e.target.value.length - cursorIndex) 
+                              + '<b class="cursor" id="cursor">█</b>' 
+                              + e.target.value.substring(e.target.value.length - cursorIndex);
 }
 
 consoleInput.addEventListener("input", inputHandler);
