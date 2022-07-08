@@ -47,6 +47,9 @@ consoleInput.addEventListener("keyup", e => {
             case "clear":
                 historyContainer.innerHTML = "";
                 break;
+            case "banner":
+                printLines(command, banner);
+                break;
             default:
                 addResult(command, `${command}: Command not found. Enter 'help' for list of available commands.`) 
                 break;
@@ -102,11 +105,11 @@ function printLines(input, command){
 
     var text = "";
     for (var i = 0; i < command.length; i++) {
-        if (input === "help"){
-            text += command[i].replace("  ", "&nbsp;".repeat(20+ 23-command[i].trim().split(/\s+/)[1].length));
-        }else{
-            text += command[i];
+        for (var j = 0; j < command[i].length; j++) {
+            text += command[i].charAt(j) === " " ? "&nbsp;" : command[i].charAt(j);
         }
+        
+        text += "<br>";
     }
     outputLogElement.innerHTML = text;
 
