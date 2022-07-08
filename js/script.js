@@ -43,16 +43,16 @@ consoleInput.addEventListener("keyup", e => {
         
         switch (command.toLowerCase()) {
             case "whois":
-                printLines(command, whois);
+                addLog(command, whois);
                 break;
             case "whoami":
                 getLocation();
                 break;
             case "social":
-                printLines(command, social);
+                addLog(command, social);
                 break;
             case "help":
-                printLines(command, help);
+                addLog(command, help);
                 break;
             case "history":
                 printHistory();
@@ -61,10 +61,10 @@ consoleInput.addEventListener("keyup", e => {
                 historyContainer.innerHTML = "";
                 break;
             case "banner":
-                printLines(command, banner);
+                addLog(command, banner);
                 break;
             default:
-                addResult(command, `${command}: Command not found. Enter 'help' for list of available commands.`) 
+                addLog(command, `${command}: Command not found. Enter 'help' for list of available commands.`) 
                 break;
         }
         
@@ -80,8 +80,7 @@ consoleInput.addEventListener("keyup", e => {
     }
 });
 
-function addResult(inputString, output){
-    const outputString = output.toString();
+function addLog(inputString, output){
     const inputLogElement = document.createElement("div");
     const outputLogElement = document.createElement("div");
 
@@ -89,9 +88,32 @@ function addResult(inputString, output){
     outputLogElement.classList.add("console-output-log");
 
     inputLogElement.textContent = `airlinedog@aueb.gr:~$ ${inputString}`;
-    outputLogElement.textContent = outputString;
+    if (typeof(output) === 'string'){
+        outputLogElement.textContent = output;
+    }else{
+        outputLogElement.innerHTML = printLines(output);
+    }
 
     historyContainer.append(inputLogElement, outputLogElement);
+}
+
+function printLines(command){
+    var text = "";
+    for (var i = 0; i < command.length; i++) {
+        var j = 0;
+        while (j < command[i].length){
+            if (command[i].charAt(j) === " " && command[i].charAt(j+1) === " "){
+                text += "&nbsp;&nbsp;";
+                j++;
+            }else{
+                text += command[i].charAt(j);
+            }
+            j++;
+        }
+
+        text += "<br>";
+    }
+    return text;
 }
 
 function setHistory(key){
@@ -137,35 +159,6 @@ const inputHandler = function(e) {
 }
 
 consoleInput.addEventListener("input", inputHandler);
-
-function printLines(input, command){
-    const inputLogElement = document.createElement("div");
-    const outputLogElement = document.createElement("div");
-
-    inputLogElement.classList.add("console-input-log");
-    outputLogElement.classList.add("console-output-log");
-    
-    inputLogElement.textContent = `airlinedog@aueb.gr:~$ ${input}`;
-
-    var text = "";
-    for (var i = 0; i < command.length; i++) {
-        var j = 0;
-        while (j < command[i].length){
-            if (command[i].charAt(j) === " " && command[i].charAt(j+1) === " "){
-                text += "&nbsp;&nbsp;";
-                j++;
-            }else{
-                text += command[i].charAt(j);
-            }
-            j++;
-        }
-        
-        text += "<br>";
-    }
-    outputLogElement.innerHTML = text;
-
-    historyContainer.append(inputLogElement, outputLogElement);
-}
 
 function printHistory(){
     const inputLogElement = document.createElement("div");
